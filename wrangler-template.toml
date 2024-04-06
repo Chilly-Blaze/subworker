@@ -1,0 +1,32 @@
+name = "subworker"
+main = "src/index.ts"
+compatibility_date = "1145-1-4"
+compatibility_flags = ["nodejs_compat"]
+
+# 下述加了***的必须自己手动修改
+[vars]
+# 后端地址（不加sub）
+BACKEND = "https://apiurl.v1.mk/"
+# *** 获取订阅凭证
+TOKEN = "114514"
+# *** 订阅地址组（仅支持https）/加密协议链接（ss,vmess,vless,trojan,hysteria）
+SUB_ADDRESS = ["https://11.4.5.14/api/v1/client/subscribe?token=1145141919810", "ss://114514@114.5.1.4:11451#114514"]
+# 远程配置地址
+CONFIG_ADDRESS = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
+
+[vars.OBFUSCATOR]
+# 混淆字段（默认只混淆密码）
+password = true
+address = false
+port = false
+name = false
+
+[triggers]
+# 定时任务运行间隔（cron格式，默认为每6小时一次）
+crons = ["0 0 0/6 * * ?"]
+
+[[kv_namespaces]]
+# 持久化容器名称（不允许改动）
+binding = "SUB_KV"
+# *** KV的id
+id = "1145141919810"
