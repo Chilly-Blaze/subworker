@@ -1,9 +1,9 @@
 import { forEachObjIndexed, isNil } from 'ramda'
 import { shortHmac } from '../../utils/crypto'
 import obfuscating from '../../utils/obfuscator'
-import { assemblySubRequest, get } from '../../api/request'
+import { assemblySubRequest, get, uaFetch } from '../../api/request'
 import response from '../../api/response'
-import { SUB_INFO_KEY } from '../../api/constants'
+import { SUB_INFO_KEY, UAs } from '../../api/constants'
 import { getLinks } from '../../utils/convert'
 
 export default async function (req: Request, env: Env): Promise<Response> {
@@ -23,8 +23,9 @@ export default async function (req: Request, env: Env): Promise<Response> {
     }
     // 请求模板配置并替换
     if (urls.length === 0) return response.ok('No Subscriptions!')
-    const subResp = await fetch(
+    const subResp = await uaFetch(
         assemblySubRequest(env, 'clash', encodeURIComponent(urls.join('|'))),
+        UAs.CLASH,
     )
     let yaml = await subResp.text()
     for (const k in replaceMap) yaml = yaml.replaceAll(k, replaceMap[k])

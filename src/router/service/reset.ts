@@ -1,7 +1,5 @@
 import {
     compose,
-    dropLastWhile,
-    isEmpty,
     isNil,
     split,
     invoker,
@@ -14,10 +12,10 @@ import {
 import { safeAtob } from '../../utils/exception'
 import { shortHmac } from '../../utils/crypto'
 import obfuscating from '../../utils/obfuscator'
-import { SUB_INFO_KEY } from '../../api/constants'
-import { assemblySubInfo, put } from '../../api/request'
+import { SUB_INFO_KEY, UAs } from '../../api/constants'
+import { assemblySubInfo, put, uaFetch } from '../../api/request'
 import response from '../../api/response'
-import { encodeLinks } from '../../utils/convert'
+import { encodeLinks, raw2Links } from '../../utils/convert'
 
 export default async function (env: Env): Promise<Response> {
     let subInfos = [0, 0, 0, 0]
@@ -26,9 +24,9 @@ export default async function (env: Env): Promise<Response> {
         // 原始节点信息存储
         if (address.startsWith('https://')) {
             // 流量信息
-            const info = (
-                await fetch(address, { headers: { 'user-agent': 'clash' } })
-            ).headers.get(SUB_INFO_KEY)
+            const info = (await uaFetch(address, UAs.CLASH)).headers.get(
+                SUB_INFO_KEY,
+            )
             if (!isNil(info)) {
                 const infoList = compose(
                     map(compose(Number, last, split('='))),
@@ -38,11 +36,11 @@ export default async function (env: Env): Promise<Response> {
                     subInfos = map(sum, transpose([infoList, subInfos]))
             }
             // 订阅转换
-            const resp = await fetch(address)
+            const resp = await uaFetch(address)
             const raw = safeAtob(await resp.text())
             if (isNil(raw)) continue
             await put(env.SUB_KV, address, raw)
-            links = compose(dropLastWhile(isEmpty), split('\r\n'))(raw)
+            links = raw2Links(raw)
         }
         // 混淆+哈希存储
         const hash = shortHmac(env.TOKEN, address)
