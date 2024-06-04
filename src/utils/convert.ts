@@ -19,8 +19,8 @@ const raw2Links = compose(
     replace(/\r/g, ''),
 )
 const getLinks = async (
-    address: string,
     kv: KVNamespace,
+    address: string,
 ): Promise<string[] | null> => {
     if (!address.startsWith('https://')) return [address]
     const raw = await get(kv, address)

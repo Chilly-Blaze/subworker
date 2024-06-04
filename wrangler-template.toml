@@ -7,14 +7,14 @@ compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-# 后端地址（不加sub）
-BACKEND = "https://apiurl.v1.mk/"
 # *** 获取订阅token，尽量使用强密码
 TOKEN = "114514"
-# *** 订阅地址组（仅支持https）/加密协议链接（ss,vmess,vless,trojan,hysteria）
-SUB_ADDRESS = ["https://11.4.5.14/api/v1/client/subscribe?token=1145141919810", "ss://114514@114.5.1.4:11451#114514"]
+# 后端地址（不加sub）
+BACKEND_ADDRESS = "https://apiurl.v1.mk/"
 # 远程配置地址
 CONFIG_ADDRESS = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
+# *** 订阅地址组（仅支持https）/加密协议链接（ss,vmess,vless,trojan,hysteria）
+SUB_ADDRESSES = ["https://11.4.5.14/api/v1/client/subscribe?token=1145141919810", "ss://114514@114.5.1.4:11451#114514"]
 
 [vars.OBFUSCATOR]
 # 混淆字段（默认只混淆密码）
