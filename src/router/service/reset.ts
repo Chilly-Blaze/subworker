@@ -11,6 +11,8 @@ import {
     equals,
     append,
     flatten,
+    all,
+    none,
 } from 'ramda'
 import { maybe, safeAtob } from '../../utils/exception'
 import { shortHmac } from '../../utils/crypto'
@@ -28,7 +30,7 @@ export default async function (env: Env): Promise<Response> {
             // 流量信息
             const infoList = maybe(
                 compose(map(compose(Number, last, split('='))), split(';')),
-            )(await fetchSubInfo(add))
+            )(env.FLAGS.network_info ? await fetchSubInfo(add) : null)
             const pred = maybe(compose(equals(4), length, flatten))(infoList)
             const sumInfos = compose(map(sum), transpose, append(infoList!))
             // 订阅转换
@@ -49,6 +51,7 @@ export default async function (env: Env): Promise<Response> {
         )(fakeProxies)
         await put(env.SUB_KV, hash, fakeValue)
     }
-    await putSubInfo(env.SUB_KV, subInfos)
+    if (env.FLAGS.network_info && !all(equals(0), subInfos))
+        await putSubInfo(env.SUB_KV, subInfos)
     return response.ok('Reset Complete!')
 }

@@ -1,4 +1,4 @@
-import { equals, last } from 'ramda'
+import { equals, forEachObjIndexed, last } from 'ramda'
 import { EXPIRETTL, SUB_INFO_KEY, UAs } from './constants'
 import { Err } from '../utils/exception'
 
@@ -26,10 +26,13 @@ const fetchRaw = async (url: string, type: UAs = UAs.BROWSER) => {
 const fetchSubInfo = async (url: string) =>
     (await fetchRaw(url, UAs.CLASH))?.headers.get(SUB_INFO_KEY) ?? null
 // Backend
-const fetchBackend = (env: Env, target: Target, urls: string[]) =>
-    fetchRaw(
-        `${env.BACKEND_ADDRESS}${equals(last(env.BACKEND_ADDRESS), '/') ? '' : '/'}sub?target=${target}&url=${encodeURIComponent(urls.join('|'))}&config=${env.CONFIG_ADDRESS}&emoji=false&add_emoji=false&list=false&xudp=false&udp=false&tfo=false&expand=true&sort=true&fdn=false&new_name=true`,
-    )
+const fetchBackend = (env: Env, target: Target, urls: string[]) => {
+    const url = new URL('sub', env.BACKEND_ADDRESS)
+    const params = { target, url: urls.join('|'), ...env.CONVERTER }
+    const install = (v: any, k: string) => url.searchParams.set(k, v)
+    forEachObjIndexed(install, params)
+    return fetchRaw(url.toString())
+}
 
 export {
     put,

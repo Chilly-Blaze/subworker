@@ -11,8 +11,6 @@ compatibility_flags = ["nodejs_compat"]
 TOKEN = "114514"
 # 后端地址（不加sub）
 BACKEND_ADDRESS = "https://apiurl.v1.mk/"
-# 远程配置地址
-CONFIG_ADDRESS = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
 # *** 订阅地址组（仅支持https）/加密协议链接（ss,vmess,vless,trojan,hysteria）
 SUB_ADDRESSES = ["https://11.4.5.14/api/v1/client/subscribe?token=1145141919810", "ss://114514@114.5.1.4:11451#114514"]
 
@@ -22,6 +20,18 @@ password = true
 address = false
 port = false
 name = false
+
+[vars.FLAGS]
+# 流量显示开关，多个订阅将累加各订阅流量情况
+network_info = true
+
+# 外部配置，配置参数参考 https://github.com/tindy2013/subconverter/blob/master/README-cn.md#%E8%B0%83%E7%94%A8%E8%AF%B4%E6%98%8E-%E8%BF%9B%E9%98%B6
+# 如不清楚则保持默认
+[vars.CONVERTER]
+# 显示在clash配置的默认名字
+filename = "Config"
+# 远程配置地址
+config = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
 
 [triggers]
 # 定时任务运行间隔（cron格式，默认为每6小时一次）

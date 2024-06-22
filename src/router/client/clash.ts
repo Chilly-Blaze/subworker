@@ -22,8 +22,10 @@ export default async function (req: Request, env: Env): Promise<Response> {
 
     // 请求模板配置并替换
     if (urls.length === 0) return response.subEmpty()
-    let yaml = (await (await fetchBackend(env, 'clash', urls))?.text()) ?? null
-    if (isNil(yaml)) return response.backendError('clash')
+    const resp = await fetchBackend(env, 'clash', urls)
+    let yaml = (await resp?.text()) ?? null
+    if (isNil(resp) || isNil(yaml)) return response.backendError('clash')
     for (const k in replaceMap) yaml = yaml.replaceAll(k, replaceMap[k])
-    return response.toClash(yaml, await getSubInfo(env.SUB_KV))
+    const info = env.FLAGS.network_info ? await getSubInfo(env.SUB_KV) : null
+    return response.toClash(yaml, info, resp.headers)
 }
