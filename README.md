@@ -39,4 +39,4 @@ subworker同样支持单条的节点，它会将其封装成另一条“订阅�
 
 每一次订阅信息的获取和更新（但单纯访问`http://[workers域名]`不会花费）都需要花费若干cloudflare的kv访问数量，这个数量和订阅链接的数量呈正相关，kv读取每天似乎是限制1000个，如果你需要集成过多的节点或订阅（例如上百个），本项目或许并不适合
 
-如果希望修改subworker请求订阅转换后端的链接格式，请前往`src/api/request.ts`中修改`assemblySubRequest`变量
+~~如果希望修改subworker请求订阅转换后端的链接格式，请前往`src/api/request.ts`中修改`assemblySubRequest`变量~~，已实现配置文件修改，通过wrangler中的`vars.CONVERTER`可实现自定义请求参数
