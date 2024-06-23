@@ -7,8 +7,14 @@ const put = (store: KVNamespace, name: string, value: string) =>
     store.put(name, value, { expirationTtl: EXPIRETTL })
 const get = (store: KVNamespace, name: string) => store.get(name)
 const getSubInfo = (store: KVNamespace) => get(store, SUB_INFO_KEY)
-const putSubInfo = (store: KVNamespace, a: number[]) =>
-    put(store, SUB_INFO_KEY, `upload=${a[0]}; download=${a[1]}; total=${a[2]};`)
+const putSubInfo = (store: KVNamespace, a: number[]) => {
+    const now = Math.floor(Date.now() / 1000)
+    return put(
+        store,
+        SUB_INFO_KEY,
+        `upload=${a[0]}; download=${a[1]}; total=${a[2]}; expire=${now}`,
+    )
+}
 
 const fetchRaw = async (url: string, type: UAs = UAs.BROWSER) => {
     try {
